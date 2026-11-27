@@ -108,3 +108,5 @@ footer .btn{margin:16px 0}footer small{display:block;opacity:.6;margin-top:10px;
 .intro h1{font-size:clamp(28px,6vw,46px);line-height:1.25}.intro p{max-width:560px;margin:8px auto 0;opacity:.95}
 @media(min-width:760px){.hero.cover{aspect-ratio:auto;height:min(72vh,640px)}}
 .intro .cta{margin-top:18px}.intro .btn{background:#fff;color:var(--primary)}.intro .btn.o{background:transparent;color:#fff;margin:0 10px 0 0}
+
+.rvform{max-width:520px;margin:22px auto 0;padding:16px;background:#fff;border-radius:16px;display:grid;gap:10px;box-shadow:0 2px 12px #0001;position:relative}.rvform h3{margin:0;text-align:center}.rvform input,.rvform select,.rvform textarea{padding:10px;border:1px solid #ddd;border-radius:10px;font:inherit;width:100%;box-sizing:border-box}#rmsg{text-align:center;font-size:14px;min-height:18px}
