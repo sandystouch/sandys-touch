@@ -10,6 +10,7 @@ button{font:inherit;font-weight:700;border:0;border-radius:50px;padding:10px 18p
 .p{border:1px solid #eee;border-radius:12px;padding:10px;display:grid;gap:8px;background:#fffafc}
 .p img{width:70px;height:70px;object-fit:cover;border-radius:10px}
 .guide{background:#fff8e1;border-radius:14px;padding:14px;line-height:1.9;font-size:14px}
+.card2{border:1px solid #eee;border-radius:12px;padding:10px;margin:8px 0;display:grid;gap:6px}textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;font:inherit}
 .bar button{padding:8px 12px;font-size:13px}.bar{position:sticky;bottom:8px;display:flex;gap:6px;justify-content:center;background:#fffe;padding:10px;border-radius:50px;box-shadow:0 2px 12px #0003;flex-wrap:wrap}
 </style></head><body><div class="w">
 <h1>⚙️ لوحة تحكم المحل</h1>
@@ -24,12 +25,17 @@ button{font:inherit;font-weight:700;border:0;border-radius:50px;padding:10px 18p
 const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
 let D=JSON.parse(ls.get('shop_draft')||'null')||JSON.parse(JSON.stringify(window.SHOP));
 const $=s=>document.querySelector(s);
+D.texts=Object.assign({},window.SHOP.texts,D.texts||{});D.about=D.about||JSON.parse(JSON.stringify(window.SHOP.about||{show:false,title:'',text:''}));D.why=D.why||[];D.reviews=D.reviews||[];D.occasions=D.occasions||[];
+if(!D.settings.ordersUrl&&window.SHOP.settings.ordersUrl)D.settings.ordersUrl=window.SHOP.settings.ordersUrl;
 const save=()=>ls.set('shop_draft',JSON.stringify(D));
+const eh2=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const esc=s=>String(s??'').replace(/"/g,'&quot;');
 function f(label,path,type='text'){return `<label>${label}<input type="${type}" value="${esc(path.split('.').reduce((o,k)=>o[k],D))}" data-k="${path}" data-t="${type}"></label>`}
 function render(){
 const S=D.settings;
 $('#app').innerHTML=`
+<details open id="ordbox"><summary>📥 صندوق الطلبات <span id="ordcnt"></span></summary><div class="b" id="ordbody"></div></details>
+<details id="rvbox"><summary>💬 آراء الزباين المنتظرة <span id="rvcnt"></span></summary><div class="b" id="rvbody"></div></details>
 <details open><summary>🏪 بيانات المحل</summary><div class="b">${f('اسم المحل','settings.name')}${f('الاسم بالعربي','settings.nameAr')}${f('جملة تحت الاسم','settings.tagline')}
 <label>الطلبات توصل على<select data-k="settings.channel"><option value="whatsapp" ${S.channel=='whatsapp'?'selected':''}>واتساب</option><option value="telegram" ${S.channel=='telegram'?'selected':''}>تليجرام</option></select></label>
 ${f('رقم الواتساب (بالكود: 2010xxxxxxxx)','settings.whatsapp')}${f('يوزر التليجرام (من غير @)','settings.telegram')}
@@ -41,6 +47,11 @@ ${f('رقم الواتساب (بالكود: 2010xxxxxxxx)','settings.whatsapp')}
 <label>التوكن (Token) - سرّي، متبعتوش لحد<input type="password" data-gh="token" value="${esc(GH.token)}" dir="ltr" autocomplete="new-password"></label>
 <label>باسكود لحماية اللوحة على الموبايل ده (اختياري)<input type="password" id="newpass" placeholder="اكتب باسكود جديد" autocomplete="off"></label>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="s" id="savegh">حفظ الإعدادات</button><button class="s" id="testgh">اختبار الاتصال</button><button class="d" id="forget">مسح التوكن من الموبايل</button></div><div id="ghmsg" style="font-size:14px;font-weight:700"></div></div></details>
+<details><summary>✏️ نصوص الصفحة</summary><div class="b"><div class="guide" style="font-size:13px">كل الكلام اللي في الصفحة تقدر تغيّره من هنا.</div>${f('اسم المحل','settings.name')}${f('رابط: العروض','texts.navOffers')}${f('رابط: المناسبات','texts.navOcc')}${f('رابط: المنتجات','texts.navShop')}${f('رابط: ليه إحنا','texts.navWhy')}${f('رابط: آراء العملاء','texts.navReviews')}${f('زرار الطلب','texts.cta')}${f('زرار الهيرو التاني','texts.btn2')}${f('عنوان العروض','texts.offersTitle')}${f('جملة العروض','texts.offersSub')}${f('عنوان المناسبات','texts.occTitle')}${f('جملة المناسبات','texts.occSub')}${f('عنوان المنتجات','texts.shopTitle')}${f('جملة المنتجات','texts.shopSub')}${f('عنوان "ليه تختارنا"','texts.whyTitle')}${f('عنوان الآراء','texts.reviewsTitle')}${f('شريط المزايا 1','texts.strip1')}${f('شريط المزايا 2','texts.strip2')}${f('شريط المزايا 3','texts.strip3')}${f('شريط المزايا 4','texts.strip4')}${f('ملاحظة تحت الصفحة (سيبها فاضية لو مش عايزها)','texts.footerNote')}</div></details>
+<details><summary>ℹ️ عن المحل</summary><div class="b"><label><span><input type="checkbox" style="width:auto" data-k="about.show" data-t="check" ${(D.about||{}).show?'checked':''}> إظهار قسم "عن المحل"</span></label>${f('العنوان','about.title')}<label>الكلام<textarea rows="5" data-k="about.text" data-t="text">${eh2((D.about||{}).text)}</textarea></label></div></details>
+<details><summary>⭐ ليه تختارنا (المزايا)</summary><div class="b">${(D.why||[]).map((w,i)=>`<div class="card2">${f('العنوان','why.'+i+'.t')}${f('الوصف','why.'+i+'.d')}<button class="d" data-dw="${i}">🗑️ حذف</button></div>`).join('')}<button class="s" id="addwhy">➕ إضافة ميزة</button></div></details>
+<details><summary>💬 آراء العملاء</summary><div class="b">${(D.reviews||[]).map((r,i)=>`<div class="card2">${f('اسم العميل','reviews.'+i+'.n')}<label>الكلام<textarea rows="3" data-k="reviews.${i}.t" data-t="text">${eh2(r.t)}</textarea></label>${f('عدد النجوم (1-5)','reviews.'+i+'.s','number')}<button class="d" data-dr="${i}">🗑️ حذف</button></div>`).join('')}<button class="s" id="addrev">➕ إضافة رأي</button></div></details>
+<details><summary>🎁 المناسبات</summary><div class="b">${(D.occasions||[]).map((o,i)=>`<div class="card2">${f('اسم المناسبة','occasions.'+i+'.name')}<label>القسم<select data-k="occasions.${i}.category">${D.categories.map(c=>`<option ${c==o.category?'selected':''}>${c}</option>`).join('')}</select></label><label>الصورة<input type="file" accept="image/*" data-occ="${i}"></label>${o.image?`<img src="${o.image}" style="height:50px">`:''}<button class="d" data-do="${i}">🗑️ حذف</button></div>`).join('')}<button class="s" id="addocc">➕ إضافة مناسبة</button></div></details>
 <details><summary>🎨 الألوان والشكل</summary><div class="b"><div class="g2">${f('اللون الأساسي','theme.primary','color')}${f('لون مميز','theme.accent','color')}${f('الخلفية','theme.background','color')}${f('لون الكتابة','theme.text','color')}</div>
 <div class="g2">${f('استدارة الأركان (0-30)','theme.radius','number')}<label>عدد المنتجات في الصف (موبايل)<select data-k="theme.columns" data-t="number"><option ${D.theme.columns==1?'selected':''}>1</option><option ${D.theme.columns==2?'selected':''}>2</option></select></label></div>
 <label>الخط<select data-k="theme.font">${['Cairo','Tajawal','Almarai','Changa','Reem Kufi','system'].map(x=>`<option ${D.theme.font==x?'selected':''}>${x}</option>`).join('')}</select></label></div></details>
@@ -62,12 +73,19 @@ document.addEventListener('input',e=>{const t=e.target;
  if(t.id=='cats'){D.categories=t.value.split(/[،,]/).map(s=>s.trim()).filter(Boolean);save()}});
 document.addEventListener('change',e=>{const t=e.target;
  if(t.dataset.img!==undefined&&t.files[0])shrink(t.files[0],700,u=>{D.products[t.dataset.img].image=u;save();render()});
+ if(t.dataset.occ!==undefined&&t.files[0])shrink(t.files[0],600,u=>{D.occasions[t.dataset.occ].image=u;save();render()});
  if(t.id=='logo'&&t.files[0])shrink(t.files[0],300,u=>{D.settings.logo=u;D.settings.logoWhite='';save();render()},'image/png');
  if(t.tagName=='SELECT'&&t.dataset.k)render()});
 document.addEventListener('click',e=>{const d=e.target.dataset;
  if(e.target.id=='add'){D.products.unshift({id:Date.now(),name:'منتج جديد',price:100,oldPrice:0,category:D.categories[0],emoji:'🌸',badge:'جديد',image:'',desc:''});save();render()}
  if(d.del!==undefined&&confirm('تحذف المنتج؟')){D.products.splice(d.del,1);save();render()}
  if(d.hide!==undefined){const p=D.products[d.hide];p.hidden=!p.hidden;save();render()}
+ if(e.target.id=='addwhy'){D.why.push({t:'ميزة جديدة',d:'اكتب وصفها هنا'});save();render()}
+ if(d.dw!==undefined&&confirm('تحذف الميزة؟')){D.why.splice(d.dw,1);save();render()}
+ if(e.target.id=='addrev'){D.reviews.push({n:'اسم العميل',t:'اكتب رأي العميل هنا',s:5});save();render()}
+ if(d.dr!==undefined&&confirm('تحذف الرأي؟')){D.reviews.splice(d.dr,1);save();render()}
+ if(e.target.id=='addocc'){D.occasions.push({name:'مناسبة جديدة',image:'',category:D.categories[0]});save();render()}
+ if(d.do!==undefined&&confirm('تحذف المناسبة؟')){D.occasions.splice(d.do,1);save();render()}
  if(e.target.id=='addarea'){(D.settings.areas=D.settings.areas||[]).push({name:'منطقة جديدة',fee:50});save();render()}
  if(e.target.id=='pv'){save();if(window.STORE_TPL){const h=window.STORE_TPL.replace('/*DATA*/','window.SHOP='+JSON.stringify(D).replace(/</g,'\\u003c')+';');$('#pf').srcdoc=h;$('#pw').style.display='block'}else window.open('index.html?preview=1')}
  if(e.target.id=='pc')$('#pw').style.display='none'
@@ -110,6 +128,37 @@ document.addEventListener('click',async e=>{const id=e.target.id;
  if(id==='forget'&&confirm('تمسح التوكن من الموبايل ده؟')){ls.del('gh_cfg');GH.token='';GH.owner='';GH.repo='';render()}
 });
 
+/* ===== صندوق الطلبات ===== */
+let ORD=null,ORDMSG='';
+const eh=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ordKey=()=>ls.get('ord_key')||'',ordUrl=()=>String(D.settings.ordersUrl||'').trim();
+const ST=['جديد','تم التجهيز','اتسلّم','ملغي'];
+async function ordLoad(){const u=ordUrl(),k=ordKey();if(!u){ORDMSG='صندوق الطلبات لسه مش متوصّل بالموقع.';ordFill();return}if(!k){ORDMSG='اكتب مفتاح الطلبات وادوس حفظ.';ordFill();return}
+ ORDMSG='بحمّل...';ordFill();try{const r=await fetch(u+'?key='+encodeURIComponent(k));const j=await r.json();if(j.error)throw 0;ORD=j.orders||[];ORDMSG=''}catch(e){ORDMSG='معرفتش أجيب الطلبات. اتأكد من المفتاح والنت.'}ordFill()}
+async function ordSet(id,s){try{const r=await fetch(ordUrl()+'?action=status&id='+encodeURIComponent(id)+'&status='+encodeURIComponent(s)+'&key='+encodeURIComponent(ordKey()));const j=await r.json();if(j.error)throw 0;const o=ORD.find(x=>String(x.id)===String(id));if(o)o.status=s;ordFill()}catch(e){alert('معرفتش أغيّر الحالة. جرب تاني.')}}
+function ordFill(){const b=document.getElementById('ordbody');if(!b)return;
+ const n=ORD?ORD.filter(o=>o.status==='جديد').length:0;document.getElementById('ordcnt').textContent=n?'('+n+' جديد)':'';
+ let h=`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end"><label style="flex:1;min-width:140px">مفتاح الطلبات (سرّي)<input type="password" id="ordkey" value="${eh(ordKey())}" dir="ltr" autocomplete="new-password"></label><button class="s" id="ordsave">حفظ وتحديث</button></div>`;
+ if(ORDMSG)h+=`<div style="margin:8px 0;font-size:14px">${eh(ORDMSG)}</div>`;
+ if(ORD&&!ORD.length&&!ORDMSG)h+='<div style="margin:8px 0">مفيش طلبات لسه.</div>';
+ if(ORD)h+=ORD.map(o=>{const t=new Date(o.time),ph=String(o.phone||'').replace(/\D/g,'');
+  return `<div style="border:1px solid #eee;border-radius:12px;padding:10px;margin-top:10px;background:${o.status==='جديد'?'#fff6fb':'#fafafa'}"><div style="display:flex;justify-content:space-between;gap:8px"><b>${eh(o.name)}</b><span style="font-size:12px;color:#888">${isNaN(t)?'':t.toLocaleString('ar-EG')}</span></div>
+<div style="font-size:14px;margin:4px 0">📞 <a href="tel:${eh(ph)}">${eh(o.phone)}</a> · <a href="https://wa.me/${eh(ph.replace(/^0/,'20'))}" target="_blank">واتساب</a><br>📍 ${eh(o.area)} - ${eh(o.address)}${o.note?'<br>📝 '+eh(o.note):''}</div>
+<div style="font-size:14px;white-space:pre-line">${eh(o.items)}</div><div style="margin:4px 0"><b>الإجمالي: ${eh(o.total)}</b> (توصيل ${eh(o.delivery)})</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">${ST.map(s=>`<button class="s" data-os="${eh(o.id)}" data-sv="${s}" style="${o.status===s?'background:#d6309a;color:#fff':''};padding:6px 10px;font-size:13px">${s}</button>`).join('')}</div></div>`}).join('');
+ b.innerHTML=h}
+document.addEventListener('click',e=>{const t=e.target;
+ if(t.id==='ordsave'){ls.set('ord_key',document.getElementById('ordkey').value.trim());ordLoad()}
+ if(t.dataset&&t.dataset.os)ordSet(t.dataset.os,t.dataset.sv)});
+let RV=null,RVMSG='';
+async function rvLoad(){const u=ordUrl(),k=ordKey();if(!u||!k)return;try{const r=await fetch(u+'?action=rlist&key='+encodeURIComponent(k));const j=await r.json();if(j.error)throw 0;RV=j.reviews||[];RVMSG=''}catch(e){RVMSG='معرفتش أجيب الآراء.'}rvFill()}
+async function rvSet(id,s){if(s==='delete'&&!confirm('تحذف الرأي نهائي؟'))return;try{const r=await fetch(ordUrl()+'?action=rstatus&id='+encodeURIComponent(id)+'&status='+s+'&key='+encodeURIComponent(ordKey()));const j=await r.json();if(j.error)throw 0;if(s==='delete')RV=RV.filter(x=>String(x.id)!==String(id));else{const o=RV.find(x=>String(x.id)===String(id));if(o)o.status=s}rvFill()}catch(e){alert('معرفتش أنفّذ. جرب تاني.')}}
+function rvFill(){const b=document.getElementById('rvbody');if(!b)return;const pend=RV?RV.filter(r=>r.status==='pending').length:0;document.getElementById('rvcnt').textContent=pend?'('+pend+' منتظر مراجعة)':'';
+ const LBL={pending:'منتظر',approved:'معتمد',hidden:'مخفي'};
+ b.innerHTML=(RVMSG?`<div>${eh(RVMSG)}</div>`:'')+(RV&&!RV.length?'<div>مفيش آراء لسه.</div>':'')+(RV||[]).map(r=>`<div style="border:1px solid #eee;border-radius:12px;padding:10px;margin-top:10px;background:${r.status==='pending'?'#fff6fb':'#fafafa'}"><div style="display:flex;justify-content:space-between"><b>${eh(r.name)}</b><span>${'★'.repeat(r.stars|0)}</span></div><div style="font-size:14px;margin:4px 0;white-space:pre-line">${eh(r.comment)}</div><div style="font-size:12px;color:#888">${eh(LBL[r.status]||r.status)}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button class="s" data-rv="${eh(r.id)}" data-rs="approved" style="padding:6px 10px;font-size:13px">اعتماد</button><button class="s" data-rv="${eh(r.id)}" data-rs="hidden" style="padding:6px 10px;font-size:13px">إخفاء</button><button class="d" data-rv="${eh(r.id)}" data-rs="delete" style="padding:6px 10px;font-size:13px">حذف</button></div></div>`).join('')}
+document.addEventListener('click',e=>{const t=e.target;if(t.dataset&&t.dataset.rv)rvSet(t.dataset.rv,t.dataset.rs);if(t.id==='ordsave')setTimeout(rvLoad,300)});
+const _render=render;render=function(){_render();ordFill();rvFill()};
+
 const out=()=>'window.SHOP = '+JSON.stringify(D,null,1)+';';
-render();
+render();ordLoad();rvLoad();
 </script></body></html>
