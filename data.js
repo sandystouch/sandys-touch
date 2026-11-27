@@ -23,7 +23,11 @@ window.SHOP = {
   "freeDeliveryFrom": 500,
   "deliveryNote": "التوصيل داخل الجيزة والقاهرة (المواعيد والأسعار مثال)",
   "logo": "img/logo-mwz3q1jp12.png",
-  "logoWhite": "img/logow-mwz3q1jp13.png"
+  "logoWhite": "img/logow-mwz3q1jp13.png",
+  "payInstapay": "01061432377",
+  "payVodafone": "01061934069",
+  "depositPct": 50,
+  "socialWhatsapp": "01061432377"
  },
  "theme": {
   "primary": "#d6309a",
