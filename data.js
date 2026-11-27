@@ -13,6 +13,9 @@ window.SHOP = {
   "deliveryFee": 100,
   "freeDeliveryFrom": 3000,
   "depositPct": 50,
+  "payInstapay": "01061432377",
+  "payVodafone": "01061934069",
+  "payNote": "حوّل العربون على إحدى الطريقتين، وبعد التحويل ابعت سكرين شوت التحويل على واتساب مع الطلب.",
   "deliveryNote": "التوصيل لجميع محافظات مصر • رسوم التوصيل 100 ج.م، ومجاني للطلبات من 3000 ج.م",
   "logo": "img/logo-mwz3q1jp12.png",
   "logoWhite": "img/logow-mwz3q1jp13.png"
