@@ -1,7 +1,7 @@
 window.SHOP = {
  "settings": {
   "name": "Sandy's Touch",
-  "nameAr": "ساندي تاتش",
+  "nameAr": "Sandy's Touch",
   "tagline": "ورد وهدايا بلمسة خاصة",
   "channel": "whatsapp",
   "whatsapp": "201061432377",
@@ -11,17 +11,21 @@ window.SHOP = {
   "city": "الجيزة والقاهرة",
   "areas": [
    {
-    "name": "الجيزة",
-    "fee": 30
+    "name": "جميع محافظات مصر ",
+    "fee": 100
    },
    {
-    "name": "القاهرة",
-    "fee": 40
+    "name": "",
+    "fee": 0
+   },
+   {
+    "name": "",
+    "fee": 0
    }
   ],
-  "deliveryFee": 30,
-  "freeDeliveryFrom": 500,
-  "deliveryNote": "التوصيل داخل الجيزة والقاهرة (المواعيد والأسعار مثال)",
+  "deliveryFee": 100,
+  "freeDeliveryFrom": 3000,
+  "deliveryNote": "التوصيل في جميع محافظات مصر",
   "logo": "img/logo-mwz3q1jp12.png",
   "logoWhite": "img/logow-mwz3q1jp13.png"
  },
@@ -62,11 +66,11 @@ window.SHOP = {
   "strip2": "توصيل سريع",
   "strip3": "تغليف فاخر",
   "strip4": "الدفع عند الاستلام",
-  "footerNote": ""
+  "footerNote": "Deposit 50% لتأكيد الطلب "
  },
  "about": {
   "show": true,
-  "title": "عن ساندي تاتش",
+  "title": "عن Sandy's Touch",
   "text": ""
  },
  "categories": [
@@ -109,10 +113,6 @@ window.SHOP = {
   {
    "t": "توصيل سريع",
    "d": "لحد باب البيت في الميعاد اللي تحدده"
-  },
-  {
-   "t": "الدفع عند الاستلام",
-   "d": "اطلب من الموبايل وادفع لما الورد يوصلك"
   }
  ],
  "reviews": [
