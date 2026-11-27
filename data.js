@@ -11,9 +11,9 @@ window.SHOP = {
   "city": "كل محافظات مصر",
   "areas": [],
   "deliveryFee": 100,
-  "freeDeliveryFrom": 0,
+  "freeDeliveryFrom": 3000,
   "depositPct": 50,
-  "deliveryNote": "التوصيل لجميع محافظات مصر • رسوم التوصيل ثابتة 100 ج.م",
+  "deliveryNote": "التوصيل لجميع محافظات مصر • رسوم التوصيل 100 ج.م، ومجاني للطلبات من 3000 ج.م",
   "logo": "img/logo-mwz3q1jp12.png",
   "logoWhite": "img/logow-mwz3q1jp13.png"
  },
