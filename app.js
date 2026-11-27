@@ -74,14 +74,14 @@ $('#cb').onclick=$('#wa').onclick=$('#fwa').onclick=e=>{e.preventDefault();open_
 function open_(o){$('#dr').classList.toggle('open',o);$('#ov').classList.toggle('open',o);if(o)cartUI()}
 function save(){ls.set('cart',JSON.stringify(cart));cartUI()}
 const P=id=>S.products.find(p=>p.id==id);
-function totals(){let sub=0;Object.entries(cart).forEach(([id,n])=>{const p=P(id);if(p)sub+=p.price*n});const fee=sub===0?0:(+st.deliveryFee||100),total=sub+fee,dp=+st.depositPct||50;return{sub,fee,total,dp,dep:Math.ceil(total*dp/100)}}
+function totals(){let sub=0;Object.entries(cart).forEach(([id,n])=>{const p=P(id);if(p)sub+=p.price*n});const fr=+st.freeDeliveryFrom||0,fee=sub===0?0:(fr>0&&sub>=fr?0:(+st.deliveryFee||100)),total=sub+fee,dp=+st.depositPct||50;return{sub,fee,fr,left:(fr>0&&sub>0&&sub<fr)?fr-sub:0,total,dp,dep:Math.ceil(total*dp/100)}}
 function cartUI(){
  const ids=Object.keys(cart).filter(i=>P(i));$('#cc').textContent=ids.reduce((a,i)=>a+cart[i],0);
  const keep=['nm','ph','ad','nt'].map(i=>$('#'+i)&&$('#'+i).value);
  const t=totals();
  $('#items').innerHTML=ids.length?ids.map(i=>{const p=P(i);return`<div class="row">${p.image?`<img src="${p.image}">`:'<span class="ph"></span>'}<span class="n">${p.name}<br><small>${money(p.price)}</small></span><span class="qty"><button data-m="${i}">−</button>${cart[i]}<button data-p="${i}">+</button></span></div>`}).join(''):'<div class="empty">السلة فاضية، ضيف ورد حلو</div>';
  $('#fm').innerHTML=ids.length?`<div class="form"><input id="nm" placeholder="الاسم"><input id="ph" type="tel" placeholder="رقم الموبايل"><select id="ar" style="font:inherit;padding:11px 14px;border:1px solid #0002;border-radius:12px;background:#fff">${GOVS.map(x=>`<option ${x===area?'selected':''}>${x}</option>`).join('')}</select><textarea id="ad" rows="2" placeholder="العنوان بالتفصيل"></textarea><input id="nt" placeholder="ملاحظات / كارت إهداء (اختياري)">
- <div class="sum"><span>المنتجات</span><span>${money(t.sub)}</span></div><div class="sum"><span>التوصيل</span><span>${money(t.fee)}</span></div><div class="sum t"><span>الإجمالي</span><span>${money(t.total)}</span></div><div class="sum"><span>العربون (${t.dp}%)</span><span>${money(t.dep)}</span></div>
+ <div class="sum"><span>المنتجات</span><span>${money(t.sub)}</span></div><div class="sum"><span>التوصيل</span><span>${t.fee?money(t.fee):'مجاني'}</span></div>${t.left?`<div style="font-size:13px;color:#d6309a;text-align:center">فاضل ${money(t.left)} ويبقى التوصيل مجاني</div>`:''}<div class="sum t"><span>الإجمالي</span><span>${money(t.total)}</span></div><div class="sum"><span>العربون (${t.dp}%)</span><span>${money(t.dep)}</span></div>
  <button class="send ${st.channel==='telegram'?'tg':''}" id="go">${st.channel==='telegram'?I.tg+' ابعت الطلب على تليجرام':I.wa+' ابعت الطلب على واتساب'}</button><small style="text-align:center;color:#888">Deposit ${t.dp}% لتأكيد الحجز</small></div>`:'';
  ['nm','ph','ad','nt'].forEach((i,k)=>{if($('#'+i)&&keep[k])$('#'+i).value=keep[k]});
  if($('#ar'))$('#ar').onchange=e=>{area=e.target.value;cartUI()};
@@ -91,7 +91,7 @@ function send(){
  const nm=$('#nm').value.trim(),ph=$('#ph').value.trim(),ad=$('#ad').value.trim();
  if(!nm||!ph||!ad){alert('من فضلك اكتب الاسم والموبايل والعنوان');return}
  const t=totals(),L=Object.keys(cart).filter(i=>P(i)).map(i=>`• ${P(i).name} × ${cart[i]} = ${money(P(i).price*cart[i])}`);
- const msg=`🌸 طلب جديد من ${st.name}${st.nameAr?' ('+st.nameAr+')':''}\n\n${L.join('\n')}\n\nالمنتجات: ${money(t.sub)}\nالتوصيل: ${money(t.fee)}\nالإجمالي: ${money(t.total)}\n💰 العربون (${t.dp}%) لتأكيد الحجز: ${money(t.dep)}\n\n👤 الاسم: ${nm}\n📞 الموبايل: ${ph}\n📍 المنطقة: ${area||st.city}\n🏠 العنوان: ${ad}${$('#nt').value?'\n📝 '+$('#nt').value:''}`;
+ const msg=`🌸 طلب جديد من ${st.name}${st.nameAr?' ('+st.nameAr+')':''}\n\n${L.join('\n')}\n\nالمنتجات: ${money(t.sub)}\nالتوصيل: ${t.fee?money(t.fee):'مجاني'}\nالإجمالي: ${money(t.total)}\n💰 العربون (${t.dp}%) لتأكيد الحجز: ${money(t.dep)}\n\n👤 الاسم: ${nm}\n📞 الموبايل: ${ph}\n📍 المنطقة: ${area||st.city}\n🏠 العنوان: ${ad}${$('#nt').value?'\n📝 '+$('#nt').value:''}`;
  if(st.ordersUrl){try{fetch(st.ordersUrl,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({name:nm,phone:ph,area:area||'',address:ad,note:(($('#nt').value||'')+' | عربون '+t.dp+'%: '+t.dep).slice(0,300),items:L.join('\n'),subtotal:t.sub,delivery:t.fee,total:t.total,hp:''})})}catch(e){}}
  if(st.channel==='telegram'){navigator.clipboard&&navigator.clipboard.writeText(msg);alert('تم نسخ الطلب. الصقه في المحادثة وابعته.');location.href='https://t.me/'+st.telegram}
  else location.href='https://wa.me/'+st.whatsapp+'?text='+encodeURIComponent(msg);
