@@ -5,7 +5,7 @@ window.SHOP = {
   "tagline": "ورد وهدايا بلمسة خاصة",
   "channel": "whatsapp",
   "whatsapp": "201061432377",
-  "ordersUrl": "",
+  "ordersUrl": "https://script.google.com/macros/s/AKfycbyONhxva1GPgCzH8oZC9RJ2sjAwUHrVsDhYVUGz6kzVJxNOajSpO4G19-H_XnpFLfLoYg/exec",
   "telegram": "username",
   "currency": "ج.م",
   "city": "الجيزة والقاهرة",
