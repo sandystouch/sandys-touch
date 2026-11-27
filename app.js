@@ -27,25 +27,36 @@ const card=p=>`<div class="card">${p.badge?`<span class="badge">${p.badge}</span
  <div class="info"><h3>${p.name}</h3><small>${p.desc||''}</small><div class="price">${p.oldPrice?`<s>${money(p.oldPrice)}</s>`:''}${money(p.price)}</div>
  <button class="add" data-id="${p.id}">أضف للسلة</button></div></div>`;
 const heroBg=b.image?`style="background-image:url('${b.image}')"`:'style="background-image:linear-gradient(135deg,#6b2340,#b4465f)"';
-const strip=[[I.leaf,'ورد طازة كل يوم'],[I.truck,'توصيل سريع'],[I.gift,'تغليف فاخر'],[I.cash,'الدفع عند الاستلام']];
+const X=Object.assign({navOffers:'العروض',navOcc:'المناسبات',navShop:'المنتجات',navWhy:'ليه إحنا',navReviews:'آراء العملاء',cta:'اطلب دلوقتي',btn2:'شوف العروض',offersTitle:'عروض مميزة',offersSub:'أسعار مخفّضة لفترة محدودة',occTitle:'اختار حسب المناسبة',occSub:'إحنا جاهزين لكل لحظة حلوة',shopTitle:'كل المنتجات',shopSub:'اضغط "أضف للسلة" وكمّل الطلب في دقيقة',whyTitle:'ليه تختارنا؟',reviewsTitle:'بيقولوا إيه عننا',strip1:'ورد طازة كل يوم',strip2:'توصيل سريع',strip3:'تغليف فاخر',strip4:'الدفع عند الاستلام',footerNote:''},S.texts||{});const AB=S.about||{};
+const strip=[[I.leaf,X.strip1],[I.truck,X.strip2],[I.gift,X.strip3],[I.cash,X.strip4]];
 const offers=vis().filter(p=>p.oldPrice>0);
 $('#root').innerHTML=`${b.show?`<div class="promo">${b.text}</div>`:''}
 <header><div class="logo">${st.logo?`<img src="${st.logo}" alt="">`:I.flower}<span>${st.name}</span></div>
-<nav><a href="#offers">العروض</a><a href="#occasions">المناسبات</a><a href="#shop">المنتجات</a><a href="#why">ليه إحنا</a><a href="#reviews">آراء العملاء</a></nav>
+<nav><a href="#offers">${X.navOffers}</a><a href="#occasions">${X.navOcc}</a><a href="#shop">${X.navShop}</a><a href="#why">${X.navWhy}</a><a href="#reviews">${X.navReviews}</a></nav>
 <button class="cartbtn" id="cb">${I.bag}<span>السلة</span><b id="cc">0</b></button></header>
 <div class="hero cover" ${heroBg}></div>
-<div class="intro"><small>${st.nameAr||''} • ${st.city}</small><h1>${b.title}</h1><p>${b.subtitle}</p><div class="cta"><a class="btn" href="#shop">${b.button}</a><a class="btn o" href="#offers">شوف العروض</a></div></div>
+<div class="intro"><small>${st.nameAr||''} • ${st.city}</small><h1>${b.title}</h1><p>${b.subtitle}</p><div class="cta"><a class="btn" href="#shop">${b.button}</a><a class="btn o" href="#offers">${X.btn2}</a></div></div>
 <div class="strip">${strip.map(s=>`<div>${s[0]}${s[1]}</div>`).join('')}</div>
-${offers.length?`<section id="offers" class="rv"><div class="sh"><h2>عروض مميزة</h2><p>أسعار مخفّضة لفترة محدودة</p></div><div class="h-scroll">${offers.map(card).join('')}</div></section>`:''}
-<section id="occasions" class="rv"><div class="sh"><h2>اختار حسب المناسبة</h2><p>إحنا جاهزين لكل لحظة حلوة</p></div><div class="occ">${(S.occasions||[]).map(o=>`<a data-oc="${o.category}"><img loading="lazy" src="${o.image}" alt=""><span>${o.name}</span></a>`).join('')}</div></section>
-<section id="shop" class="rv"><div class="sh"><h2>كل المنتجات</h2><p>اضغط "أضف للسلة" وكمّل الطلب في دقيقة</p></div>
+${offers.length?`<section id="offers" class="rv"><div class="sh"><h2>${X.offersTitle}</h2><p>${X.offersSub}</p></div><div class="h-scroll">${offers.map(card).join('')}</div></section>`:''}
+<section id="occasions" class="rv"><div class="sh"><h2>${X.occTitle}</h2><p>${X.occSub}</p></div><div class="occ">${(S.occasions||[]).map(o=>`<a data-oc="${o.category}"><img loading="lazy" src="${o.image}" alt=""><span>${o.name}</span></a>`).join('')}</div></section>
+<section id="shop" class="rv"><div class="sh"><h2>${X.shopTitle}</h2><p>${X.shopSub}</p></div>
 <div class="tools"><input class="search" id="q" placeholder="دوّر على منتج..."><div class="cats" id="cats">${['الكل',...S.categories].map(c=>`<button class="${c===cat?'on':''}" data-c="${c}">${c}</button>`).join('')}</div></div><div class="grid" id="grid"></div></section>
-<div class="dark"><section id="why" class="rv"><div class="sh"><h2>ليه تختارنا؟</h2></div><div class="why">${(S.why||[]).map((w,i)=>`<div><i>${['١','٢','٣','٤','٥','٦'][i]}</i><b>${w.t}</b><p>${w.d}</p></div>`).join('')}</div></section></div>
-<section id="reviews" class="rv"><div class="sh"><h2>بيقولوا إيه عننا</h2></div><div class="revs">${(S.reviews||[]).map(r=>`<div class="rev"><div class="st">${I.star.repeat(r.s||5)}</div><p>${r.t}</p><b>${r.n}</b></div>`).join('')}</div></section>
-<footer>${st.logoWhite?`<img src="${st.logoWhite}" alt="${st.name}">`:`<h3>${st.name}</h3>`}${st.nameAr?`<h3>${st.nameAr}</h3>`:''}<div>${st.tagline}</div><a class="btn" id="fwa" href="#">اطلب دلوقتي</a><div>${st.deliveryNote}</div><small>صور المعاينة: Unsplash (ترخيص مجاني). هتتبدل بصور المحل.</small></footer>
-<a class="wa-float" id="wa" href="#">${st.channel==='telegram'?I.tg:I.wa}<span>اطلب دلوقتي</span></a>
+<div class="dark"><section id="why" class="rv"><div class="sh"><h2>${X.whyTitle}</h2></div><div class="why">${(S.why||[]).map((w,i)=>`<div><i>${['١','٢','٣','٤','٥','٦'][i]}</i><b>${w.t}</b><p>${w.d}</p></div>`).join('')}</div></section></div>
+${AB.show&&AB.text?`<section id="about" class="rv"><div class="sh"><h2>${AB.title||''}</h2></div><p class="about" style="max-width:640px;margin:0 auto;padding:0 18px;text-align:center;line-height:1.9;white-space:pre-line">${AB.text}</p></section>`:''}
+<section id="reviews" class="rv"><div class="sh"><h2>${X.reviewsTitle}</h2></div><div class="revs">${(S.reviews||[]).map(r=>`<div class="rev"><div class="st">${I.star.repeat(r.s||5)}</div><p>${r.t}</p><b>${r.n}</b></div>`).join('')}</div>${st.ordersUrl?`<div class="rvform"><h3>اكتب رأيك</h3><input id="rn" placeholder="اسمك" maxlength="40"><select id="rs"><option value="5">★★★★★</option><option value="4">★★★★</option><option value="3">★★★</option><option value="2">★★</option><option value="1">★</option></select><textarea id="rc" rows="3" maxlength="500" placeholder="رأيك في الورد والخدمة"></textarea><input id="rhp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true"><button class="btn" id="rsend">ابعت رأيك</button><div id="rmsg"></div></div>`:''}</section>
+<footer>${st.logoWhite?`<img src="${st.logoWhite}" alt="${st.name}">`:`<h3>${st.name}</h3>`}${st.nameAr?`<h3>${st.nameAr}</h3>`:''}<div>${st.tagline}</div><a class="btn" id="fwa" href="#">${X.cta}</a><div>${st.deliveryNote}</div>${X.footerNote?`<small>${X.footerNote}</small>`:''}</footer>
+<a class="wa-float" id="wa" href="#">${st.channel==='telegram'?I.tg:I.wa}<span>${X.cta}</span></a>
 <div class="overlay" id="ov"></div>
 <aside class="drawer" id="dr"><h2><span class="serif">سلتك</span><button id="x" style="background:none;font-size:24px">✕</button></h2><div class="items" id="items"></div><div id="fm"></div></aside>`;
+const H=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+if(st.ordersUrl){
+ fetch(st.ordersUrl+'?action=reviews').then(r=>r.json()).then(j=>{const box=document.querySelector('.revs');if(!box||!j.reviews)return;box.insertAdjacentHTML('beforeend',j.reviews.map(r=>`<div class="rev"><div class="st">${I.star.repeat(Math.max(1,Math.min(5,r.stars|0)))}</div><p>${H(r.comment)}</p><b>${H(r.name)}</b></div>`).join(''))}).catch(()=>{});
+ const rb=document.getElementById('rsend');
+ if(rb)rb.onclick=()=>{const n=document.getElementById('rn').value.trim(),c=document.getElementById('rc').value.trim(),m=document.getElementById('rmsg');
+  if(!n||!c){m.textContent='اكتب اسمك ورأيك';return}
+  rb.disabled=true;
+  fetch(st.ordersUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({kind:'review',name:n,stars:+document.getElementById('rs').value,comment:c,hp:document.getElementById('rhp').value})}).then(()=>{m.textContent='شكرًا! رأيك هيظهر بعد ما نراجعه.';document.getElementById('rn').value='';document.getElementById('rc').value=''}).catch(()=>{m.textContent='حصل خطأ، جرب تاني.';rb.disabled=false})}
+}
 function grid(){
  const list=vis().filter(p=>(cat==='الكل'||p.category===cat)&&p.name.includes(q));
  $('#grid').innerHTML=list.length?list.map(card).join(''):'<div class="empty">مفيش منتجات هنا</div>';
@@ -81,6 +92,7 @@ function send(){
  if(!nm||!ph||!ad){alert('من فضلك اكتب الاسم والموبايل والعنوان');return}
  const t=totals(),L=Object.keys(cart).filter(i=>P(i)).map(i=>`• ${P(i).name} × ${cart[i]} = ${money(P(i).price*cart[i])}`);
  const msg=`🌸 طلب جديد من ${st.name}${st.nameAr?' ('+st.nameAr+')':''}\n\n${L.join('\n')}\n\nالمنتجات: ${money(t.sub)}\nالتوصيل: ${t.fee?money(t.fee):'مجاني'}\nالإجمالي: ${money(t.total)}\n\n👤 الاسم: ${nm}\n📞 الموبايل: ${ph}\n📍 المنطقة: ${area||st.city}\n🏠 العنوان: ${ad}${$('#nt').value?'\n📝 '+$('#nt').value:''}`;
+ if(st.ordersUrl){try{fetch(st.ordersUrl,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({name:nm,phone:ph,area:area||st.city||'',address:ad,note:$('#nt').value||'',items:L.join('\n'),subtotal:t.sub,delivery:t.fee,total:t.total,hp:''})})}catch(e){}}
  if(st.channel==='telegram'){navigator.clipboard&&navigator.clipboard.writeText(msg);alert('تم نسخ الطلب. الصقه في المحادثة وابعته.');location.href='https://t.me/'+st.telegram}
  else location.href='https://wa.me/'+st.whatsapp+'?text='+encodeURIComponent(msg);
 }
