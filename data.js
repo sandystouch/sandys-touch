@@ -8,24 +8,12 @@ window.SHOP = {
   "ordersUrl": "https://script.google.com/macros/s/AKfycbyONhxva1GPgCzH8oZC9RJ2sjAwUHrVsDhYVUGz6kzVJxNOajSpO4G19-H_XnpFLfLoYg/exec",
   "telegram": "username",
   "currency": "ج.م",
-  "city": "الجيزة والقاهرة",
-  "areas": [
-   {
-    "name": "جميع محافظات مصر ",
-    "fee": 100
-   },
-   {
-    "name": "",
-    "fee": 0
-   },
-   {
-    "name": "",
-    "fee": 0
-   }
-  ],
+  "city": "كل محافظات مصر",
+  "areas": [],
   "deliveryFee": 100,
-  "freeDeliveryFrom": 3000,
-  "deliveryNote": "التوصيل في جميع محافظات مصر",
+  "freeDeliveryFrom": 0,
+  "depositPct": 50,
+  "deliveryNote": "التوصيل لجميع محافظات مصر • رسوم التوصيل ثابتة 100 ج.م",
   "logo": "img/logo-mwz3q1jp12.png",
   "logoWhite": "img/logow-mwz3q1jp13.png"
  },
@@ -42,7 +30,7 @@ window.SHOP = {
   "show": true,
   "text": "",
   "title": "كل مناسبة تستاهل لمسة خاصة",
-  "subtitle": "ورد وبوكيهات وهدايا مغلّفة بذوق، وتوصيل لحد باب بيتك في الجيزة والقاهرة",
+  "subtitle": "ورد وبوكيهات وهدايا مغلّفة بذوق، وتوصيل لحد باب بيتك في كل محافظات مصر",
   "button": "تسوّق الورد",
   "image": "img/cover-mwz3q1jp14.jpg"
  },
@@ -65,8 +53,8 @@ window.SHOP = {
   "strip1": "ورد طازة وصناعي كل يوم",
   "strip2": "توصيل سريع",
   "strip3": "تغليف فاخر",
-  "strip4": "الدفع عند الاستلام",
-  "footerNote": "Deposit 50% لتأكيد الطلب "
+  "strip4": "Deposit 50% لتأكيد الحجز",
+  "footerNote": "Deposit 50% لتأكيد الحجز"
  },
  "about": {
   "show": true,
