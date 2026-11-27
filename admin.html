@@ -1,0 +1,115 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>لوحة التحكم</title>
+<style>
+*{box-sizing:border-box}body{font-family:Cairo,system-ui,sans-serif;background:#f4f1f3;margin:0;padding:12px;color:#2b1a22}
+.w{max-width:760px;margin:auto}h1{color:#e11d74;font-size:22px}
+details{background:#fff;border-radius:14px;margin:10px 0;box-shadow:0 1px 6px #0001}summary{padding:14px;font-weight:800;cursor:pointer;font-size:16px}
+.b{padding:0 14px 14px;display:grid;gap:10px}label{font-size:13px;font-weight:700;display:grid;gap:4px}
+input,select,textarea{font:inherit;padding:9px;border:1px solid #0003;border-radius:10px;width:100%}input[type=color]{height:42px;padding:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;font-weight:700;border:0;border-radius:50px;padding:10px 18px;cursor:pointer;background:#e11d74;color:#fff}button.s{background:#eee;color:#333}button.d{background:#fee;color:#c00}
+.p{border:1px solid #eee;border-radius:12px;padding:10px;display:grid;gap:8px;background:#fffafc}
+.p img{width:70px;height:70px;object-fit:cover;border-radius:10px}
+.guide{background:#fff8e1;border-radius:14px;padding:14px;line-height:1.9;font-size:14px}
+.bar button{padding:8px 12px;font-size:13px}.bar{position:sticky;bottom:8px;display:flex;gap:6px;justify-content:center;background:#fffe;padding:10px;border-radius:50px;box-shadow:0 2px 12px #0003;flex-wrap:wrap}
+</style></head><body><div class="w">
+<h1>⚙️ لوحة تحكم المحل</h1>
+<div class="guide"><b>إزاي تستخدمها (بسيط):</b><br>١) عدّل أي حاجة تحت (المنتجات، الألوان، الأرقام).<br>٢) دوس <b>معاينة</b> تشوف الشكل.<br>٣) دوس <b>🚀 حفظ ونشر</b> (بعد ما تربط اللوحة بالموقع من قسم "الربط بالموقع") وبعد دقيقة الموقع يتحدّث.<br><small>لو مش مربوط: دوس ⬇️ data.js وارفعه يدويًا على GitHub: </small> ادخل على صفحة المشروع في GitHub ← افتح ملف <b>data.js</b> ← أيقونة القلم ← امسح القديم والصق الجديد (أو ارفع الملف مكانه) ← Commit. بعد دقيقة الموقع يتحدّث.</div>
+<div id="app"></div><textarea id="code" rows="8" style="display:none;margin-top:10px;direction:ltr;font-size:11px" readonly></textarea>
+<div class="bar"><button id="pv">👁️ معاينة</button><button id="pub" style="background:#16a34a">🚀 حفظ ونشر</button><button id="dl">⬇️ data.js</button><button id="cp">📋 نسخ</button><button class="s" id="rs">↺ أصل</button></div>
+</div>
+<div id="pw" style="display:none;position:fixed;inset:0;z-index:99;background:#fff"><button id="pc" style="position:fixed;top:10px;left:10px;z-index:100;box-shadow:0 2px 8px #0004">✕ إغلاق المعاينة</button><iframe id="pf" style="width:100%;height:100%;border:0"></iframe></div>
+<div id="lock" style="display:none;position:fixed;inset:0;z-index:200;background:#fbeef5;align-items:center;justify-content:center;padding:20px"><div style="background:#fff;border-radius:16px;padding:24px;max-width:320px;width:100%;display:grid;gap:12px;text-align:center"><h2 style="margin:0;color:#d6309a">🔒 لوحة التحكم</h2><input id="lockin" type="password" placeholder="الباسكود" style="text-align:center"><button id="lockgo">دخول</button><div id="lockerr" style="color:#c00;font-size:13px"></div></div></div>
+<script src="data.js"></script>
+<script>
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+let D=JSON.parse(ls.get('shop_draft')||'null')||JSON.parse(JSON.stringify(window.SHOP));
+const $=s=>document.querySelector(s);
+const save=()=>ls.set('shop_draft',JSON.stringify(D));
+const esc=s=>String(s??'').replace(/"/g,'&quot;');
+function f(label,path,type='text'){return `<label>${label}<input type="${type}" value="${esc(path.split('.').reduce((o,k)=>o[k],D))}" data-k="${path}" data-t="${type}"></label>`}
+function render(){
+const S=D.settings;
+$('#app').innerHTML=`
+<details open><summary>🏪 بيانات المحل</summary><div class="b">${f('اسم المحل','settings.name')}${f('الاسم بالعربي','settings.nameAr')}${f('جملة تحت الاسم','settings.tagline')}
+<label>الطلبات توصل على<select data-k="settings.channel"><option value="whatsapp" ${S.channel=='whatsapp'?'selected':''}>واتساب</option><option value="telegram" ${S.channel=='telegram'?'selected':''}>تليجرام</option></select></label>
+${f('رقم الواتساب (بالكود: 2010xxxxxxxx)','settings.whatsapp')}${f('يوزر التليجرام (من غير @)','settings.telegram')}
+<div class="g2">${f('العملة','settings.currency')}${f('المدينة','settings.city')}${f('سعر التوصيل','settings.deliveryFee','number')}${f('توصيل مجاني من','settings.freeDeliveryFrom','number')}</div>${f('ملاحظة التوصيل','settings.deliveryNote')}<b style="font-size:13px">مناطق التوصيل وسعر كل منطقة</b>${(S.areas||[]).map((x,i)=>`<div class="g2"><label>المنطقة<input data-k="settings.areas.${i}.name" value="${esc(x.name)}"></label><label>السعر<input type="number" data-t="number" data-k="settings.areas.${i}.fee" value="${x.fee}"></label></div>`).join('')}<button class="s" id="addarea">+ منطقة</button>
+<label>اللوجو<input type="file" accept="image/*" id="logo"></label>${S.logo?`<img src="${S.logo}" style="height:50px">`:''}</div></details>
+<details><summary>🔗 الربط بالموقع (حفظ ونشر)</summary><div class="b">
+<div class="guide" style="font-size:13px">ده بيخليك تحفظ التعديلات على الموقع مباشرة. اللي بتلصقه هنا بيتحفظ على موبايلك بس.</div>
+<div class="g2"><label>اسم حسابك في GitHub<input data-gh="owner" value="${esc(GH.owner)}" dir="ltr"></label><label>اسم المشروع (repo)<input data-gh="repo" value="${esc(GH.repo)}" dir="ltr"></label></div>
+<label>التوكن (Token) - سرّي، متبعتوش لحد<input type="password" data-gh="token" value="${esc(GH.token)}" dir="ltr" autocomplete="off"></label>
+<label>باسكود لحماية اللوحة على الموبايل ده (اختياري)<input type="password" id="newpass" placeholder="اكتب باسكود جديد" autocomplete="off"></label>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="s" id="savegh">حفظ الإعدادات</button><button class="s" id="testgh">اختبار الاتصال</button><button class="d" id="forget">مسح التوكن من الموبايل</button></div><div id="ghmsg" style="font-size:14px;font-weight:700"></div></div></details>
+<details><summary>🎨 الألوان والشكل</summary><div class="b"><div class="g2">${f('اللون الأساسي','theme.primary','color')}${f('لون مميز','theme.accent','color')}${f('الخلفية','theme.background','color')}${f('لون الكتابة','theme.text','color')}</div>
+<div class="g2">${f('استدارة الأركان (0-30)','theme.radius','number')}<label>عدد المنتجات في الصف (موبايل)<select data-k="theme.columns" data-t="number"><option ${D.theme.columns==1?'selected':''}>1</option><option ${D.theme.columns==2?'selected':''}>2</option></select></label></div>
+<label>الخط<select data-k="theme.font">${['Cairo','Tajawal','Almarai','Changa','Reem Kufi','system'].map(x=>`<option ${D.theme.font==x?'selected':''}>${x}</option>`).join('')}</select></label></div></details>
+<details><summary>📣 البانر والعروض</summary><div class="b"><label><span><input type="checkbox" style="width:auto" data-k="banner.show" data-t="check" ${D.banner.show?'checked':''}> إظهار البانر</span></label>${f('شريط العرض الأعلى','banner.text')}${f('العنوان الكبير','banner.title')}${f('الجملة الصغيرة','banner.subtitle')}${f('كلمة الزر','banner.button')}</div></details>
+<details><summary>🗂️ الأقسام</summary><div class="b"><label>اكتب الأقسام بينها فاصلة ،<input id="cats" value="${esc(D.categories.join('، '))}"></label></div></details>
+<details open><summary>🌹 المنتجات (${D.products.length})</summary><div class="b"><button id="add">+ منتج جديد</button>
+${D.products.map((p,i)=>`<div class="p"><div style="display:flex;gap:10px;align-items:center">${p.image?`<img src="${p.image}">`:`<span style="font-size:44px">${p.emoji||'🌸'}</span>`}<b>${p.name}</b></div>
+<label>الاسم<input data-p="${i}" data-f="name" value="${esc(p.name)}"></label>
+<div class="g2"><label>السعر<input type="number" data-p="${i}" data-f="price" value="${p.price}"></label><label>السعر قبل الخصم (0 = مفيش)<input type="number" data-p="${i}" data-f="oldPrice" value="${p.oldPrice||0}"></label>
+<label>القسم<select data-p="${i}" data-f="category">${D.categories.map(c=>`<option ${c==p.category?'selected':''}>${c}</option>`).join('')}</select></label><label>شارة (خصم / جديد)<input data-p="${i}" data-f="badge" value="${esc(p.badge)}"></label></div>
+<label>وصف قصير<input data-p="${i}" data-f="desc" value="${esc(p.desc)}"></label>
+<label>صورة المنتج<input type="file" accept="image/*" data-img="${i}"></label>
+<div style="display:flex;gap:8px"><button class="s" data-hide="${i}">${p.hidden?'👁️ إظهار':'🙈 إخفاء (خلص)'}</button><button class="d" data-del="${i}">🗑️ حذف</button></div></div>`).join('')}</div></details>`;
+}
+function shrink(file,max,cb,mt){const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb((mt?c.toDataURL(mt):c.toDataURL('image/jpeg',.8)))};im.src=r.result};r.readAsDataURL(file)}
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.dataset.k){const ks=t.dataset.k.split('.'),o=ks.slice(0,-1).reduce((a,k)=>a[k],D);o[ks.at(-1)]=t.dataset.t=='number'?+t.value:t.dataset.t=='check'?t.checked:t.value;save()}
+ if(t.dataset.f){const p=D.products[t.dataset.p];p[t.dataset.f]=t.type=='number'?+t.value:t.value;save()}
+ if(t.id=='cats'){D.categories=t.value.split(/[،,]/).map(s=>s.trim()).filter(Boolean);save()}});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.dataset.img!==undefined&&t.files[0])shrink(t.files[0],700,u=>{D.products[t.dataset.img].image=u;save();render()});
+ if(t.id=='logo'&&t.files[0])shrink(t.files[0],300,u=>{D.settings.logo=u;D.settings.logoWhite='';save();render()},'image/png');
+ if(t.tagName=='SELECT'&&t.dataset.k)render()});
+document.addEventListener('click',e=>{const d=e.target.dataset;
+ if(e.target.id=='add'){D.products.unshift({id:Date.now(),name:'منتج جديد',price:100,oldPrice:0,category:D.categories[0],emoji:'🌸',badge:'جديد',image:'',desc:''});save();render()}
+ if(d.del!==undefined&&confirm('تحذف المنتج؟')){D.products.splice(d.del,1);save();render()}
+ if(d.hide!==undefined){const p=D.products[d.hide];p.hidden=!p.hidden;save();render()}
+ if(e.target.id=='addarea'){(D.settings.areas=D.settings.areas||[]).push({name:'منطقة جديدة',fee:50});save();render()}
+ if(e.target.id=='pv'){save();if(window.STORE_TPL){const h=window.STORE_TPL.replace('/*DATA*/','window.SHOP='+JSON.stringify(D).replace(/</g,'\\u003c')+';');$('#pf').srcdoc=h;$('#pw').style.display='block'}else window.open('index.html?preview=1')}
+ if(e.target.id=='pc')$('#pw').style.display='none'
+ if(e.target.id=='cp'){const t=$('#code');t.value=out();t.style.display='block';t.select();try{document.execCommand('copy');alert('تم نسخ الكود. الصقه في ملف data.js على GitHub')}catch(x){}}
+ if(e.target.id=='rs'&&confirm('هترجع كل حاجة للنسخة الأصلية؟')){ls.del('shop_draft');D=JSON.parse(JSON.stringify(window.SHOP));render()}
+ if(e.target.id=='dl'){const b=new Blob([out()],{type:'text/javascript'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='data.js';document.body.appendChild(a);a.click();$('#code').value=out();$('#code').style.display='block'}});
+
+/* ===== الربط بالموقع ===== */
+const GH=(function(){try{return JSON.parse(ls.get('gh_cfg')||'{}')}catch(e){return{}}})();GH.branch=GH.branch||'main';
+const sha256=async s=>{try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return 'p'+s.split('').reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7)}};
+(async function(){const h=ls.get('gh_pass');if(!h)return;const L=document.getElementById('lock');L.style.display='flex';
+ const go=async()=>{if(await sha256(document.getElementById('lockin').value)===h){L.style.display='none'}else document.getElementById('lockerr').textContent='الباسكود غلط'};
+ document.getElementById('lockgo').onclick=go;document.getElementById('lockin').onkeydown=e=>{if(e.key==='Enter')go()}})();
+const msg=(t,ok)=>{const e=document.getElementById('ghmsg');if(e){e.textContent=t;e.style.color=ok?'#16a34a':'#c00'}else alert(t)};
+document.addEventListener('input',e=>{const k=e.target.dataset.gh;if(k){GH[k]=e.target.value.trim()}});
+const api=(path,opt={})=>fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+path+(opt.method==='PUT'?'':'?ref='+encodeURIComponent(GH.branch)),Object.assign({headers:{'Authorization':'Bearer '+GH.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'}},opt));
+function errText(r){if(r.status===401)return 'التوكن غلط أو انتهت صلاحيته. اعمل توكن جديد.';if(r.status===403)return 'التوكن مالوش صلاحية الكتابة (Contents: Read and write) أو في حد أقصى للطلبات.';if(r.status===404)return 'مش لاقي المشروع. راجع اسم الحساب واسم المشروع، وإن التوكن مسموح له بالمشروع ده.';if(r.status===409||r.status===422)return 'حصل تعارض في الحفظ. جرّب تاني.';return 'حصل خطأ ('+r.status+'). جرّب تاني.'}
+async function sha(path){const r=await api(path);if(r.status===404)return null;if(!r.ok)throw r;return (await r.json()).sha}
+async function put(path,b64,note){for(let i=0;i<2;i++){const s=await sha(path);const r=await api(path,{method:'PUT',body:JSON.stringify(Object.assign({message:note,content:b64,branch:GH.branch},s?{sha:s}:{}))});if(r.ok)return;if(r.status!==409&&r.status!==422)throw r}throw {status:409}}
+const b64utf=s=>btoa(unescape(encodeURIComponent(s)));
+function needCfg(){if(!GH.owner||!GH.repo||!GH.token){msg('اكتب اسم الحساب واسم المشروع والتوكن الأول (من قسم الربط بالموقع).');return true}return false}
+async function publish(){
+ if(window.STANDALONE){alert('زرار النشر بيشتغل من لوحة التحكم اللي على الموقع نفسه (بعد ما الموقع يتنشر). هنا ممكن تجرّب التعديل والمعاينة بس.');return}
+ if(needCfg())return;const btn=document.getElementById('pub');btn.disabled=true;const old=btn.textContent;
+ try{
+  const C=JSON.parse(JSON.stringify(D));let n=0;const up=[];
+  const mv=(obj,key,name)=>{const v=obj[key];if(typeof v==='string'&&v.startsWith('data:')){const ext=v.startsWith('data:image/png')?'png':'jpg',p='img/'+name+'-'+Date.now().toString(36)+(n++)+'.'+ext;up.push([p,v.split(',')[1]]);obj[key]=p}};
+  C.products.forEach(p=>mv(p,'image','p'+p.id));(C.occasions||[]).forEach((o,i)=>mv(o,'image','occ'+i));mv(C.settings,'logo','logo');mv(C.settings,'logoWhite','logow');mv(C.banner,'image','cover');
+  for(let i=0;i<up.length;i++){btn.textContent='رفع الصور '+(i+1)+'/'+up.length+'...';await put(up[i][0],up[i][1],'Add image')}
+  btn.textContent='حفظ البيانات...';
+  await put('data.js',b64utf('window.SHOP = '+JSON.stringify(C,null,1)+';'),'Update shop data');
+  D=C;save();ls.del('shop_draft');render();
+  alert('تم الحفظ ✅ التغييرات هتظهر على الموقع بعد حوالي دقيقة. لو ما ظهرتش اعمل تحديث للصفحة.');
+ }catch(r){alert(r&&r.status?errText(r):'مفيش اتصال بالنت أو حصل خطأ. جرّب تاني.')}
+ btn.disabled=false;btn.textContent=old}
+document.addEventListener('click',async e=>{const id=e.target.id;
+ if(id==='pub')publish();
+ if(id==='savegh'){ls.set('gh_cfg',JSON.stringify(GH));const p=document.getElementById('newpass').value;if(p)ls.set('gh_pass',await sha(p));msg(p?'اتحفظ. الباسكود شغال من المرة الجاية.':'اتحفظ.',true)}
+ if(id==='testgh'){if(needCfg())return;msg('بجرب...',true);try{const r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo,{headers:{'Authorization':'Bearer '+GH.token}});if(!r.ok)throw r;const j=await r.json();msg(j.permissions&&j.permissions.push?'الاتصال شغال وتقدر تحفظ ✅':'الاتصال شغال بس التوكن مالوش صلاحية الكتابة.',!!(j.permissions&&j.permissions.push))}catch(x){msg(x&&x.status?errText(x):'مفيش اتصال بالنت.')}}
+ if(id==='forget'&&confirm('تمسح التوكن من الموبايل ده؟')){ls.del('gh_cfg');GH.token='';GH.owner='';GH.repo='';render()}
+});
+
+const out=()=>'window.SHOP = '+JSON.stringify(D,null,1)+';';
+render();
+</script></body></html>
