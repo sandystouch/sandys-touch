@@ -113,3 +113,5 @@ footer .btn{margin:16px 0}footer small{display:block;opacity:.6;margin-top:10px;
 
 .form input[type=checkbox]{width:20px;height:20px;padding:0;accent-color:#d6309a;flex:none}
 .osum{background:#fff;border:1px solid #f0d3e6;border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.6}
+
+.socs{display:flex;justify-content:center;gap:14px;margin:6px 0 14px}.soc{width:46px;height:46px;border-radius:50%;border:1.5px solid #d6309a;color:#d6309a;display:flex;align-items:center;justify-content:center;transition:.2s}.soc svg{width:22px;height:22px}.soc:hover,.soc:active{background:#d6309a;color:#fff}
