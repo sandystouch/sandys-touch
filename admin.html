@@ -18,7 +18,7 @@ button{font:inherit;font-weight:700;border:0;border-radius:50px;padding:10px 18p
 <div class="bar"><button id="pv">👁️ معاينة</button><button id="pub" style="background:#16a34a">🚀 حفظ ونشر</button><button id="dl">⬇️ data.js</button><button id="cp">📋 نسخ</button><button class="s" id="rs">↺ أصل</button></div>
 </div>
 <div id="pw" style="display:none;position:fixed;inset:0;z-index:99;background:#fff"><button id="pc" style="position:fixed;top:10px;left:10px;z-index:100;box-shadow:0 2px 8px #0004">✕ إغلاق المعاينة</button><iframe id="pf" style="width:100%;height:100%;border:0"></iframe></div>
-<div id="lock" style="display:none;position:fixed;inset:0;z-index:200;background:#fbeef5;align-items:center;justify-content:center;padding:20px"><div style="background:#fff;border-radius:16px;padding:24px;max-width:320px;width:100%;display:grid;gap:12px;text-align:center"><h2 style="margin:0;color:#d6309a">🔒 لوحة التحكم</h2><input id="lockin" type="password" placeholder="الباسكود" style="text-align:center"><button id="lockgo">دخول</button><div id="lockerr" style="color:#c00;font-size:13px"></div></div></div>
+<div id="lock" style="display:none;position:fixed;inset:0;z-index:200;background:#fbeef5;align-items:center;justify-content:center;padding:20px"><div style="background:#fff;border-radius:16px;padding:24px;max-width:320px;width:100%;display:grid;gap:12px;text-align:center"><h2 style="margin:0;color:#d6309a">🔒 لوحة التحكم</h2><input id="lockin" type="password" placeholder="الباسكود" style="text-align:center"><button id="lockgo">دخول</button><div id="lockerr" style="color:#c00;font-size:13px"></div><button id="lockreset" style="background:none;color:#888;font-size:12px;text-decoration:underline;padding:4px">نسيت الباسكود؟ امسحه (وهيتمسح التوكن كمان)</button></div></div>
 <script src="data.js"></script>
 <script>
 const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
@@ -38,7 +38,7 @@ ${f('رقم الواتساب (بالكود: 2010xxxxxxxx)','settings.whatsapp')}
 <details><summary>🔗 الربط بالموقع (حفظ ونشر)</summary><div class="b">
 <div class="guide" style="font-size:13px">ده بيخليك تحفظ التعديلات على الموقع مباشرة. اللي بتلصقه هنا بيتحفظ على موبايلك بس.</div>
 <div class="g2"><label>اسم حسابك في GitHub<input data-gh="owner" value="${esc(GH.owner)}" dir="ltr"></label><label>اسم المشروع (repo)<input data-gh="repo" value="${esc(GH.repo)}" dir="ltr"></label></div>
-<label>التوكن (Token) - سرّي، متبعتوش لحد<input type="password" data-gh="token" value="${esc(GH.token)}" dir="ltr" autocomplete="off"></label>
+<label>التوكن (Token) - سرّي، متبعتوش لحد<input type="password" data-gh="token" value="${esc(GH.token)}" dir="ltr" autocomplete="new-password"></label>
 <label>باسكود لحماية اللوحة على الموبايل ده (اختياري)<input type="password" id="newpass" placeholder="اكتب باسكود جديد" autocomplete="off"></label>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="s" id="savegh">حفظ الإعدادات</button><button class="s" id="testgh">اختبار الاتصال</button><button class="d" id="forget">مسح التوكن من الموبايل</button></div><div id="ghmsg" style="font-size:14px;font-weight:700"></div></div></details>
 <details><summary>🎨 الألوان والشكل</summary><div class="b"><div class="g2">${f('اللون الأساسي','theme.primary','color')}${f('لون مميز','theme.accent','color')}${f('الخلفية','theme.background','color')}${f('لون الكتابة','theme.text','color')}</div>
@@ -79,8 +79,8 @@ document.addEventListener('click',e=>{const d=e.target.dataset;
 const GH=(function(){try{return JSON.parse(ls.get('gh_cfg')||'{}')}catch(e){return{}}})();GH.branch=GH.branch||'main';
 const sha256=async s=>{try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return 'p'+s.split('').reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7)}};
 (async function(){const h=ls.get('gh_pass');if(!h)return;const L=document.getElementById('lock');L.style.display='flex';
- const go=async()=>{if(await sha256(document.getElementById('lockin').value)===h){L.style.display='none'}else document.getElementById('lockerr').textContent='الباسكود غلط'};
- document.getElementById('lockgo').onclick=go;document.getElementById('lockin').onkeydown=e=>{if(e.key==='Enter')go()}})();
+ const go=async()=>{if(await sha256(document.getElementById('lockin').value.trim())===h){L.style.display='none'}else document.getElementById('lockerr').textContent='الباسكود غلط'};
+ document.getElementById('lockreset').onclick=()=>{if(confirm('هيتمسح الباسكود والتوكن من الموبايل ده. تكمل؟')){try{localStorage.removeItem('gh_pass');localStorage.removeItem('gh_cfg')}catch(e){}L.style.display='none'}};document.getElementById('lockgo').onclick=go;document.getElementById('lockin').onkeydown=e=>{if(e.key==='Enter')go()}})();
 const msg=(t,ok)=>{const e=document.getElementById('ghmsg');if(e){e.textContent=t;e.style.color=ok?'#16a34a':'#c00'}else alert(t)};
 document.addEventListener('input',e=>{const k=e.target.dataset.gh;if(k){GH[k]=e.target.value.trim()}});
 const api=(path,opt={})=>fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+path+(opt.method==='PUT'?'':'?ref='+encodeURIComponent(GH.branch)),Object.assign({headers:{'Authorization':'Bearer '+GH.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'}},opt));
@@ -105,7 +105,7 @@ async function publish(){
  btn.disabled=false;btn.textContent=old}
 document.addEventListener('click',async e=>{const id=e.target.id;
  if(id==='pub')publish();
- if(id==='savegh'){ls.set('gh_cfg',JSON.stringify(GH));const p=document.getElementById('newpass').value;if(p)ls.set('gh_pass',await sha(p));msg(p?'اتحفظ. الباسكود شغال من المرة الجاية.':'اتحفظ.',true)}
+ if(id==='savegh'){ls.set('gh_cfg',JSON.stringify(GH));const p=document.getElementById('newpass').value;if(p.trim())ls.set('gh_pass',await sha256(p.trim()));msg(p?'اتحفظ. الباسكود شغال من المرة الجاية.':'اتحفظ.',true)}
  if(id==='testgh'){if(needCfg())return;msg('بجرب...',true);try{const r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo,{headers:{'Authorization':'Bearer '+GH.token}});if(!r.ok)throw r;const j=await r.json();msg(j.permissions&&j.permissions.push?'الاتصال شغال وتقدر تحفظ ✅':'الاتصال شغال بس التوكن مالوش صلاحية الكتابة.',!!(j.permissions&&j.permissions.push))}catch(x){msg(x&&x.status?errText(x):'مفيش اتصال بالنت.')}}
  if(id==='forget'&&confirm('تمسح التوكن من الموبايل ده؟')){ls.del('gh_cfg');GH.token='';GH.owner='';GH.repo='';render()}
 });
