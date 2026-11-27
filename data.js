@@ -8,7 +8,7 @@ window.SHOP = {
     tagline: "ورد وهدايا بلمسة خاصة",
     channel: "whatsapp",
     whatsapp: "201061432377",
-    ordersUrl: "",   // رابط صندوق الطلبات (بيتحط تلقائي)
+    ordersUrl:"https://script.google.com/macros/s/AKfycbyONhxva1GPgCzH8oZC9RJ2sjAwUHrVsDhYVUGz6kzVJxNOajSpO4G19-H_XnpFLfLoYg/exec",   // رابط صندوق الطلبات (بيتحط تلقائي)
     telegram: "username",
     currency: "ج.م",
     city: "الجيزة والقاهرة",
