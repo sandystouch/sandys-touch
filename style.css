@@ -1,6 +1,6 @@
 :root{--primary:#b4465f;--accent:#c9a063;--bg:#fbf6f1;--text:#3a1826;--r:18px;--cols:2;--hf:'Amiri',Georgia,serif}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
 body{font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
 button{font-family:inherit;cursor:pointer;border:0}
 h1,h2,h3.serif,.logo span{font-family:var(--hf)}
