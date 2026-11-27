@@ -20,14 +20,14 @@ const I={
  cash:'<svg viewBox="0 0 24 24"><path d="M2 6h20v12H2zm10 2.500a3.500 3.500 0 100 7 3.500 3.500 0 000-7z"/></svg>'
 };
 const money=n=>Number(n).toLocaleString('ar-EG')+' '+st.currency;
-let area=(st.areas&&st.areas[0]||{}).name;let cat='الكل',q='',cart=(function(){try{return JSON.parse(ls.get('cart')||'{}')}catch(e){return {}}})();
+const GOVS=['القاهرة','الجيزة','الإسكندرية','القليوبية','الشرقية','الدقهلية','الغربية','المنوفية','البحيرة','كفر الشيخ','دمياط','بورسعيد','الإسماعيلية','السويس','شمال سيناء','جنوب سيناء','الفيوم','بني سويف','المنيا','أسيوط','سوهاج','قنا','الأقصر','أسوان','البحر الأحمر','الوادي الجديد','مطروح'];let area=GOVS[0];let cat='الكل',q='',cart=(function(){try{return JSON.parse(ls.get('cart')||'{}')}catch(e){return {}}})();
 const vis=()=>S.products.filter(p=>p.hidden!==true);
 const pic=p=>p.image?`<img loading="lazy" src="${p.image}" alt="${p.name}">`:I.flower.replace('<svg','<svg class="ph"');
 const card=p=>`<div class="card">${p.badge?`<span class="badge">${p.badge}</span>`:''}<div class="pic">${pic(p)}</div>
  <div class="info"><h3>${p.name}</h3><small>${p.desc||''}</small><div class="price">${p.oldPrice?`<s>${money(p.oldPrice)}</s>`:''}${money(p.price)}</div>
  <button class="add" data-id="${p.id}">أضف للسلة</button></div></div>`;
 const heroBg=b.image?`style="background-image:url('${b.image}')"`:'style="background-image:linear-gradient(135deg,#6b2340,#b4465f)"';
-const X=Object.assign({navOffers:'العروض',navOcc:'المناسبات',navShop:'المنتجات',navWhy:'ليه إحنا',navReviews:'آراء العملاء',cta:'اطلب دلوقتي',btn2:'شوف العروض',offersTitle:'عروض مميزة',offersSub:'أسعار مخفّضة لفترة محدودة',occTitle:'اختار حسب المناسبة',occSub:'إحنا جاهزين لكل لحظة حلوة',shopTitle:'كل المنتجات',shopSub:'اضغط "أضف للسلة" وكمّل الطلب في دقيقة',whyTitle:'ليه تختارنا؟',reviewsTitle:'بيقولوا إيه عننا',strip1:'ورد طازة كل يوم',strip2:'توصيل سريع',strip3:'تغليف فاخر',strip4:'الدفع عند الاستلام',footerNote:''},S.texts||{});const AB=S.about||{};
+const X=Object.assign({navOffers:'العروض',navOcc:'المناسبات',navShop:'المنتجات',navWhy:'ليه إحنا',navReviews:'آراء العملاء',cta:'اطلب دلوقتي',btn2:'شوف العروض',offersTitle:'عروض مميزة',offersSub:'أسعار مخفّضة لفترة محدودة',occTitle:'اختار حسب المناسبة',occSub:'إحنا جاهزين لكل لحظة حلوة',shopTitle:'كل المنتجات',shopSub:'اضغط "أضف للسلة" وكمّل الطلب في دقيقة',whyTitle:'ليه تختارنا؟',reviewsTitle:'بيقولوا إيه عننا',strip1:'ورد طازة كل يوم',strip2:'توصيل سريع',strip3:'تغليف فاخر',strip4:'Deposit 50% لتأكيد الحجز',footerNote:''},S.texts||{});const AB=S.about||{};
 const strip=[[I.leaf,X.strip1],[I.truck,X.strip2],[I.gift,X.strip3],[I.cash,X.strip4]];
 const offers=vis().filter(p=>p.oldPrice>0);
 $('#root').innerHTML=`${b.show?`<div class="promo">${b.text}</div>`:''}
@@ -74,15 +74,15 @@ $('#cb').onclick=$('#wa').onclick=$('#fwa').onclick=e=>{e.preventDefault();open_
 function open_(o){$('#dr').classList.toggle('open',o);$('#ov').classList.toggle('open',o);if(o)cartUI()}
 function save(){ls.set('cart',JSON.stringify(cart));cartUI()}
 const P=id=>S.products.find(p=>p.id==id);
-function totals(){let sub=0;Object.entries(cart).forEach(([id,n])=>{const p=P(id);if(p)sub+=p.price*n});const ar=(st.areas||[]).find(x=>x.name===area),base=ar?ar.fee:st.deliveryFee,fee=sub===0?0:(st.freeDeliveryFrom&&sub>=st.freeDeliveryFrom?0:base);return{sub,fee,total:sub+fee}}
+function totals(){let sub=0;Object.entries(cart).forEach(([id,n])=>{const p=P(id);if(p)sub+=p.price*n});const fee=sub===0?0:(+st.deliveryFee||100),total=sub+fee,dp=+st.depositPct||50;return{sub,fee,total,dp,dep:Math.ceil(total*dp/100)}}
 function cartUI(){
  const ids=Object.keys(cart).filter(i=>P(i));$('#cc').textContent=ids.reduce((a,i)=>a+cart[i],0);
  const keep=['nm','ph','ad','nt'].map(i=>$('#'+i)&&$('#'+i).value);
  const t=totals();
  $('#items').innerHTML=ids.length?ids.map(i=>{const p=P(i);return`<div class="row">${p.image?`<img src="${p.image}">`:'<span class="ph"></span>'}<span class="n">${p.name}<br><small>${money(p.price)}</small></span><span class="qty"><button data-m="${i}">−</button>${cart[i]}<button data-p="${i}">+</button></span></div>`}).join(''):'<div class="empty">السلة فاضية، ضيف ورد حلو</div>';
- $('#fm').innerHTML=ids.length?`<div class="form"><input id="nm" placeholder="الاسم"><input id="ph" type="tel" placeholder="رقم الموبايل">${(st.areas&&st.areas.length)?`<select id="ar" style="font:inherit;padding:11px 14px;border:1px solid #0002;border-radius:12px;background:#fff">${st.areas.map(x=>`<option ${x.name===area?'selected':''}>${x.name}</option>`).join('')}</select>`:''}<textarea id="ad" rows="2" placeholder="العنوان بالتفصيل"></textarea><input id="nt" placeholder="ملاحظات / كارت إهداء (اختياري)">
- <div class="sum"><span>المنتجات</span><span>${money(t.sub)}</span></div><div class="sum"><span>التوصيل</span><span>${t.fee?money(t.fee):'مجاني'}</span></div><div class="sum t"><span>الإجمالي</span><span>${money(t.total)}</span></div>
- <button class="send ${st.channel==='telegram'?'tg':''}" id="go">${st.channel==='telegram'?I.tg+' ابعت الطلب على تليجرام':I.wa+' ابعت الطلب على واتساب'}</button><small style="text-align:center;color:#888">الدفع عند الاستلام</small></div>`:'';
+ $('#fm').innerHTML=ids.length?`<div class="form"><input id="nm" placeholder="الاسم"><input id="ph" type="tel" placeholder="رقم الموبايل"><select id="ar" style="font:inherit;padding:11px 14px;border:1px solid #0002;border-radius:12px;background:#fff">${GOVS.map(x=>`<option ${x===area?'selected':''}>${x}</option>`).join('')}</select><textarea id="ad" rows="2" placeholder="العنوان بالتفصيل"></textarea><input id="nt" placeholder="ملاحظات / كارت إهداء (اختياري)">
+ <div class="sum"><span>المنتجات</span><span>${money(t.sub)}</span></div><div class="sum"><span>التوصيل</span><span>${money(t.fee)}</span></div><div class="sum t"><span>الإجمالي</span><span>${money(t.total)}</span></div><div class="sum"><span>العربون (${t.dp}%)</span><span>${money(t.dep)}</span></div>
+ <button class="send ${st.channel==='telegram'?'tg':''}" id="go">${st.channel==='telegram'?I.tg+' ابعت الطلب على تليجرام':I.wa+' ابعت الطلب على واتساب'}</button><small style="text-align:center;color:#888">Deposit ${t.dp}% لتأكيد الحجز</small></div>`:'';
  ['nm','ph','ad','nt'].forEach((i,k)=>{if($('#'+i)&&keep[k])$('#'+i).value=keep[k]});
  if($('#ar'))$('#ar').onchange=e=>{area=e.target.value;cartUI()};
  if($('#go'))$('#go').onclick=send;
@@ -91,8 +91,8 @@ function send(){
  const nm=$('#nm').value.trim(),ph=$('#ph').value.trim(),ad=$('#ad').value.trim();
  if(!nm||!ph||!ad){alert('من فضلك اكتب الاسم والموبايل والعنوان');return}
  const t=totals(),L=Object.keys(cart).filter(i=>P(i)).map(i=>`• ${P(i).name} × ${cart[i]} = ${money(P(i).price*cart[i])}`);
- const msg=`🌸 طلب جديد من ${st.name}${st.nameAr?' ('+st.nameAr+')':''}\n\n${L.join('\n')}\n\nالمنتجات: ${money(t.sub)}\nالتوصيل: ${t.fee?money(t.fee):'مجاني'}\nالإجمالي: ${money(t.total)}\n\n👤 الاسم: ${nm}\n📞 الموبايل: ${ph}\n📍 المنطقة: ${area||st.city}\n🏠 العنوان: ${ad}${$('#nt').value?'\n📝 '+$('#nt').value:''}`;
- if(st.ordersUrl){try{fetch(st.ordersUrl,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({name:nm,phone:ph,area:area||st.city||'',address:ad,note:$('#nt').value||'',items:L.join('\n'),subtotal:t.sub,delivery:t.fee,total:t.total,hp:''})})}catch(e){}}
+ const msg=`🌸 طلب جديد من ${st.name}${st.nameAr?' ('+st.nameAr+')':''}\n\n${L.join('\n')}\n\nالمنتجات: ${money(t.sub)}\nالتوصيل: ${money(t.fee)}\nالإجمالي: ${money(t.total)}\n💰 العربون (${t.dp}%) لتأكيد الحجز: ${money(t.dep)}\n\n👤 الاسم: ${nm}\n📞 الموبايل: ${ph}\n📍 المنطقة: ${area||st.city}\n🏠 العنوان: ${ad}${$('#nt').value?'\n📝 '+$('#nt').value:''}`;
+ if(st.ordersUrl){try{fetch(st.ordersUrl,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({name:nm,phone:ph,area:area||'',address:ad,note:(($('#nt').value||'')+' | عربون '+t.dp+'%: '+t.dep).slice(0,300),items:L.join('\n'),subtotal:t.sub,delivery:t.fee,total:t.total,hp:''})})}catch(e){}}
  if(st.channel==='telegram'){navigator.clipboard&&navigator.clipboard.writeText(msg);alert('تم نسخ الطلب. الصقه في المحادثة وابعته.');location.href='https://t.me/'+st.telegram}
  else location.href='https://wa.me/'+st.whatsapp+'?text='+encodeURIComponent(msg);
 }
