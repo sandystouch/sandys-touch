@@ -138,6 +138,17 @@ window.SHOP = {
  ],
  "products": [
   {
+   "id": 1795800372975,
+   "name": "بوكيه ورد بلدي ",
+   "price": 650,
+   "oldPrice": 0,
+   "category": "بوكيهات",
+   "emoji": "🌸",
+   "badge": "جديد",
+   "image": "img/p1795800372975-mwz97iz50.jpg",
+   "desc": "بوكيه بلدي "
+  },
+  {
    "id": 1795799970212,
    "name": "بصمه كتب الكتاب ",
    "price": 650,
@@ -147,86 +158,6 @@ window.SHOP = {
    "badge": "جديد",
    "image": "img/p1795799970212-mwz8zsk60.jpg",
    "desc": "بصمه كتب كتاب "
-  },
-  {
-   "id": 1,
-   "name": "بوكيه جوري أحمر (مثال)",
-   "price": 350,
-   "oldPrice": 450,
-   "category": "بوكيهات",
-   "badge": "خصم 22%",
-   "image": "img/p1-mwz3q1jp0.jpg",
-   "desc": "12 وردة جوري أحمر مع تغليف أنيق"
-  },
-  {
-   "id": 2,
-   "name": "بوكيه مشكل فاخر (مثال)",
-   "price": 480,
-   "oldPrice": 0,
-   "category": "بوكيهات",
-   "badge": "الأكثر طلبًا",
-   "image": "img/p2-mwz3q1jp1.jpg",
-   "desc": "ورد موسمي بألوان هادية وورق أخضر"
-  },
-  {
-   "id": 3,
-   "name": "توليب هولندي (مثال)",
-   "price": 220,
-   "oldPrice": 260,
-   "category": "بوكيهات",
-   "badge": "خصم",
-   "image": "img/p3-mwz3q1jp2.jpg",
-   "desc": "10 توليب طازة في فازة زجاج"
-  },
-  {
-   "id": 4,
-   "name": "وردة وردي في فازة (مثال)",
-   "price": 90,
-   "oldPrice": 0,
-   "category": "ورد فردي",
-   "badge": "",
-   "image": "img/p4-mwz3q1jp3.jpg",
-   "desc": "وردة طبيعية بساق طويلة وفازة"
-  },
-  {
-   "id": 5,
-   "name": "دوار الشمس (مثال)",
-   "price": 160,
-   "oldPrice": 0,
-   "category": "ورد فردي",
-   "badge": "جديد",
-   "image": "img/p5-mwz3q1jp4.jpg",
-   "desc": "باقة دوار الشمس المشرقة"
-  },
-  {
-   "id": 6,
-   "name": "بوكس ورد للهدايا (مثال)",
-   "price": 520,
-   "oldPrice": 600,
-   "category": "هدايا",
-   "badge": "خصم",
-   "image": "img/p6-mwz3q1jp5.jpg",
-   "desc": "تنسيق قلب بألوان مبهجة"
-  },
-  {
-   "id": 7,
-   "name": "بوكيه بيوني وردي (مثال)",
-   "price": 390,
-   "oldPrice": 0,
-   "category": "بوكيهات",
-   "badge": "",
-   "image": "img/p7-mwz3q1jp6.jpg",
-   "desc": "بيوني ناعم للمناسبات الرومانسية"
-  },
-  {
-   "id": 8,
-   "name": "تنسيق طاولة للمناسبات (مثال)",
-   "price": 1500,
-   "oldPrice": 0,
-   "category": "مناسبات",
-   "badge": "",
-   "image": "img/p8-mwz3q1jp7.jpg",
-   "desc": "السعر يبدأ من، كلمنا للتفاصيل"
   }
  ]
 };
