@@ -3,6 +3,7 @@ const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:
 let S=window.SHOP;
 if(location.search.includes('preview')){try{const d=JSON.parse(ls.get('shop_draft'));if(d)S=d}catch(e){}}
 const $=s=>document.querySelector(s),st=S.settings,th=S.theme,b=S.banner;
+[['payInstapay','01061432377'],['payVodafone','01061934069'],['payNote','حوّل العربون على إحدى الطريقتين، وبعد التحويل ابعت سكرين شوت التحويل على واتساب مع الطلب.'],['depositPct',50],['freeDeliveryFrom',3000],['deliveryFee',100]].forEach(([k,v])=>{if(st[k]===undefined||st[k]===null)st[k]=v});
 const R=document.documentElement.style;
 R.setProperty('--primary',th.primary);R.setProperty('--accent',th.accent);R.setProperty('--bg',th.background);R.setProperty('--text',th.text);R.setProperty('--r',th.radius+'px');R.setProperty('--cols',th.columns);
 const fonts=['Amiri:wght@400;700','Montserrat:wght@600;700'];if(th.font&&th.font!=='system'){fonts.push(th.font.replace(/ /g,'+')+':wght@400;500;700;800');document.body.style.fontFamily="'"+th.font+"',system-ui,sans-serif"}
