@@ -8,26 +8,20 @@ window.SHOP = {
   "ordersUrl": "https://script.google.com/macros/s/AKfycbyONhxva1GPgCzH8oZC9RJ2sjAwUHrVsDhYVUGz6kzVJxNOajSpO4G19-H_XnpFLfLoYg/exec",
   "telegram": "username",
   "currency": "ج.م",
-  "city": "الجيزة والقاهرة",
-  "areas": [
-   {
-    "name": "الجيزة",
-    "fee": 30
-   },
-   {
-    "name": "القاهرة",
-    "fee": 40
-   }
-  ],
-  "deliveryFee": 30,
-  "freeDeliveryFrom": 500,
-  "deliveryNote": "التوصيل داخل الجيزة والقاهرة (المواعيد والأسعار مثال)",
+  "city": "كل محافظات مصر",
+  "areas": [],
+  "deliveryFee": 100,
+  "freeDeliveryFrom": 3000,
+  "deliveryNote": "التوصيل لجميع محافظات مصر • رسوم التوصيل 100 ج.م، ومجاني للطلبات من 3000 ج.م",
   "logo": "img/logo-mwz3q1jp12.png",
   "logoWhite": "img/logow-mwz3q1jp13.png",
+  "depositPct": 50,
+  "socialWhatsapp": "https://wa.me/201061432377",
+  "socialInstagram": "https://www.instagram.com/sandy_is_touch_?utm_source=qr&igsh=aDk4Z25hOG54eTN3",
+  "socialFacebook": "https://www.facebook.com/share/1HnRRUeD1k/",
   "payInstapay": "01061432377",
   "payVodafone": "01061934069",
-  "depositPct": 50,
-  "socialWhatsapp": "01061432377"
+  "payNote": "حوّل العربون على إحدى الطريقتين، وبعد التحويل ابعت سكرين شوت التحويل على واتساب مع الطلب."
  },
  "theme": {
   "primary": "#d6309a",
@@ -42,7 +36,7 @@ window.SHOP = {
   "show": true,
   "text": "",
   "title": "كل مناسبة تستاهل لمسة خاصة",
-  "subtitle": "ورد وبوكيهات وهدايا مغلّفة بذوق، وتوصيل لحد باب بيتك في الجيزة والقاهرة",
+  "subtitle": "ورد وبوكيهات وهدايا مغلّفة بذوق، وتوصيل لحد باب بيتك في كل محافظات مصر",
   "button": "تسوّق الورد",
   "image": "img/cover-mwz3q1jp14.jpg"
  },
@@ -65,8 +59,8 @@ window.SHOP = {
   "strip1": "ورد بلدي و ورد صناعي ",
   "strip2": "توصيل سريع",
   "strip3": "تغليف فاخر",
-  "strip4": " لجميع المناسبات ",
-  "footerNote": ""
+  "strip4": "Deposit 50% لتأكيد الحجز",
+  "footerNote": "Deposit 50% لتأكيد الحجز"
  },
  "about": {
   "show": true,
@@ -113,10 +107,6 @@ window.SHOP = {
   {
    "t": "توصيل سريع",
    "d": "لحد باب البيت في الميعاد اللي تحدده"
-  },
-  {
-   "t": "الدفع عند الاستلام",
-   "d": "اطلب من الموبايل وادفع لما الورد يوصلك"
   }
  ],
  "reviews": [
