@@ -80,7 +80,7 @@ footer .btn{margin:16px 0}footer small{display:block;opacity:.6;margin-top:10px;
 .drawer{position:fixed;top:0;bottom:0;left:0;width:min(430px,100%);background:#fff;z-index:50;transform:translateX(-102%);transition:.35s;display:flex;flex-direction:column}
 .drawer.open{transform:none}
 .drawer h2{padding:16px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;font-size:24px}
-.items{flex:1;overflow:auto;padding:8px 14px}
+.drawer{overflow-y:auto;display:block}.drawer h2{position:sticky;top:0;background:#fff;z-index:2}.items{overflow:visible;padding:8px 14px}
 .row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #f1f1f1}
 .row img,.row .ph{width:54px;height:54px;border-radius:12px;object-fit:cover;background:#f6dfe3}
 .row .n{flex:1;font-size:14px;font-weight:700;line-height:1.3}.row .n small{color:var(--primary);font-weight:700}
@@ -110,3 +110,6 @@ footer .btn{margin:16px 0}footer small{display:block;opacity:.6;margin-top:10px;
 .intro .cta{margin-top:18px}.intro .btn{background:#fff;color:var(--primary)}.intro .btn.o{background:transparent;color:#fff;margin:0 10px 0 0}
 
 .rvform{max-width:520px;margin:22px auto 0;padding:16px;background:#fff;border-radius:16px;display:grid;gap:10px;box-shadow:0 2px 12px #0001;position:relative}.rvform h3{margin:0;text-align:center}.rvform input,.rvform select,.rvform textarea{padding:10px;border:1px solid #ddd;border-radius:10px;font:inherit;width:100%;box-sizing:border-box}#rmsg{text-align:center;font-size:14px;min-height:18px}
+
+.form input[type=checkbox]{width:20px;height:20px;padding:0;accent-color:#d6309a;flex:none}
+.osum{background:#fff;border:1px solid #f0d3e6;border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.6}
